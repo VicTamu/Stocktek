@@ -55,6 +55,7 @@ class EventSignal(BaseModel):
     confidence: float
     source_url: str | None = None
     summary: str | None = None
+    is_demo: bool = False
 
 
 class SourceDocument(BaseModel):

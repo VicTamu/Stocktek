@@ -48,6 +48,7 @@ export interface EventSignal {
   confidence: number;
   source_url?: string | null;
   summary?: string | null;
+  is_demo?: boolean;
 }
 
 export interface SourceDocument {

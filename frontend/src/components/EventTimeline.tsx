@@ -30,6 +30,7 @@ export function EventTimeline({ events }: EventTimelineProps) {
                   <span>{event.event_type}</span>
                   <span>{event.signal_date}</span>
                   <span>{formatPercent(event.confidence, 0)} confidence</span>
+                  {event.is_demo && <span className="demo-tag">demo</span>}
                 </div>
                 <p>{event.summary}</p>
                 {event.source_url && (

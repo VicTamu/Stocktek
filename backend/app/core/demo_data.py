@@ -108,6 +108,7 @@ def demo_events(symbol: str) -> list[dict[str, Any]]:
             "confidence": 0.55,
             "source_url": "https://www.sec.gov/edgar/search/",
             "summary": f"{symbol} demo earnings and filing watch item",
+            "is_demo": True,
         },
         {
             "id": f"demo-{symbol.lower()}-news",
@@ -118,6 +119,7 @@ def demo_events(symbol: str) -> list[dict[str, Any]]:
             "confidence": 0.45,
             "source_url": "https://www.gdeltproject.org/data.html",
             "summary": f"{symbol} demo market news item from free source discovery",
+            "is_demo": True,
         },
     ]
 

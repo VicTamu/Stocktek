@@ -76,6 +76,7 @@ export function demoSummary(symbol: string): TickerSummary {
         confidence: 0.55,
         source_url: "https://www.sec.gov/edgar/search/",
         summary: `${selected.symbol} demo earnings and filing watch item`,
+        is_demo: true,
       },
       {
         id: `demo-${selected.symbol}-news`,
@@ -86,6 +87,7 @@ export function demoSummary(symbol: string): TickerSummary {
         confidence: 0.45,
         source_url: "https://www.gdeltproject.org/data.html",
         summary: `${selected.symbol} demo market news item from free source discovery`,
+        is_demo: true,
       },
     ],
     what_changed: [

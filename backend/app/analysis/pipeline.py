@@ -66,10 +66,12 @@ def update_watchlist(symbols: list[str], replace: bool = False) -> list[dict[str
 
 
 def ingest_daily(request: IngestRequest) -> dict[str, Any]:
-    watchlist = request.symbols or [row["symbol"] for row in get_watchlist()]
+    watchlist = request.symbols or [
+        row["symbol"] for row in get_watchlist() if row.get("sector") != "Benchmark"
+    ]
     symbols = sorted({symbol.upper().strip() for symbol in watchlist if symbol.strip()})
     benchmarks = ["SPY", "QQQ"]
-    data_symbols = sorted(set(symbols).union(benchmarks))
+    data_symbols = sorted(set(symbols).union(benchmarks).union({"^VIX"}))
     warnings: list[str] = []
 
     price_bars, price_warnings = fetch_price_bars(data_symbols, request.start, request.end)
@@ -129,20 +131,18 @@ def get_signals(signal_date: date | None = None) -> list[dict[str, Any]]:
             [signal_date],
         )
     else:
-        latest = fetch_one("SELECT max(signal_date) AS latest FROM signals")
-        latest_date = latest["latest"] if latest else None
-        rows = (
-            fetch_all(
-                """
-                SELECT *
-                FROM signals
-                WHERE signal_date = ?
-                ORDER BY probability_outperform_spy DESC
-                """,
-                [latest_date],
-            )
-            if latest_date
-            else []
+        # Latest signal per symbol: sources publish completed sessions at
+        # different times, so a single global max(signal_date) can hide
+        # fresh signals behind one symbol's newer-dated row.
+        rows = fetch_all(
+            """
+            SELECT *
+            FROM signals
+            QUALIFY row_number() OVER (
+                PARTITION BY symbol ORDER BY signal_date DESC
+            ) = 1
+            ORDER BY probability_outperform_spy DESC
+            """
         )
 
     if not rows:
@@ -430,13 +430,14 @@ def _rebuild_features_and_signals(
 ) -> dict[str, int]:
     spy_bars = _load_price_bars("SPY", conn)
     qqq_bars = _load_price_bars("QQQ", conn)
+    vix_bars = _load_price_bars("^VIX", conn)
     feature_count = 0
     signal_count = 0
 
     for symbol in symbols:
         bars = _load_price_bars(symbol, conn)
         events = _load_recent_events(symbol, conn)
-        feature = build_feature_snapshot(symbol, bars, spy_bars, qqq_bars, events, macro_regime)
+        feature = build_feature_snapshot(symbol, bars, spy_bars, qqq_bars, events, macro_regime, vix_bars)
         if not feature:
             continue
         _upsert_feature(conn, feature)

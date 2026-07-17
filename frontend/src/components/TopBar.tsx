@@ -55,6 +55,20 @@ export function TopBar({ health, loading, ingestResult, apiMode, signalsAreDemo,
           <strong> {ingestResult.documents_upserted}</strong> source docs cached.
         </div>
       )}
+
+      {ingestResult && ingestResult.warnings.length > 0 && (
+        <div className="warning-strip" role="status">
+          <strong>{ingestResult.warnings.length} data warning{ingestResult.warnings.length > 1 ? "s" : ""}:</strong>
+          <ul>
+            {ingestResult.warnings.slice(0, 4).map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+            {ingestResult.warnings.length > 4 && (
+              <li>…and {ingestResult.warnings.length - 4} more</li>
+            )}
+          </ul>
+        </div>
+      )}
     </header>
   );
 }

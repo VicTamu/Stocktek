@@ -11,6 +11,7 @@ def build_feature_snapshot(
     qqq_bars: list[dict[str, Any]],
     event_signals: list[dict[str, Any]],
     macro_regime: str,
+    vix_bars: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
     bars = sorted(bars, key=lambda item: item["bar_date"])
     if len(bars) < 6:
@@ -37,6 +38,7 @@ def build_feature_snapshot(
         "moving_average_50": mean(closes[-50:]) if len(closes) >= 50 else None,
         "data_points": len(bars),
     }
+    payload.update(_vix_context(vix_bars))
 
     return {
         "symbol": symbol,
@@ -83,6 +85,20 @@ def _weighted_sentiment(events: list[dict[str, Any]]) -> float:
     weights = [float(item.get("confidence") or 0.1) for item in events]
     weighted = sum(float(item.get("sentiment") or 0.0) * weight for item, weight in zip(events, weights))
     return weighted / max(sum(weights), 0.1)
+
+
+def _vix_context(vix_bars: list[dict[str, Any]] | None) -> dict[str, Any]:
+    if not vix_bars:
+        return {}
+    ordered = sorted(vix_bars, key=lambda item: item["bar_date"])
+    closes = [_close(bar) for bar in ordered]
+    vix_close = closes[-1]
+    vix_20d_avg = mean(closes[-20:]) if len(closes) >= 20 else None
+    return {
+        "vix_close": vix_close,
+        "vix_20d_avg": vix_20d_avg,
+        "vix_vs_20d_avg": (vix_close / vix_20d_avg - 1) if vix_20d_avg else None,
+    }
 
 
 def _safe_subtract(left: float | None, right: float | None) -> float | None:

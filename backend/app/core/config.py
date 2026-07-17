@@ -24,6 +24,9 @@ class Settings:
         "StockTek/0.1 educational research contact@example.com",
     )
     fred_api_key: str | None = os.getenv("FRED_API_KEY") or None
+    tiingo_api_key: str | None = os.getenv("TIINGO_API_KEY") or None
+    finnhub_api_key: str | None = os.getenv("FINNHUB_API_KEY") or None
+    price_source: str | None = os.getenv("STOCKTEK_PRICE_SOURCE") or None
     request_timeout_seconds: float = 12.0
 
     @property
