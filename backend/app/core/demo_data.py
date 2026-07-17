@@ -60,6 +60,7 @@ def demo_summary(symbol: str) -> dict[str, Any]:
             }
             for event in events[:2]
         ],
+        "is_demo": True,
     }
 
     return {

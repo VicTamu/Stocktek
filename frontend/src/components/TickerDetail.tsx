@@ -1,5 +1,6 @@
 import { AlertTriangle, Link2, Star, X } from "lucide-react";
 import { CompanyMark } from "./CompanyMark";
+import { PriceChart } from "./PriceChart";
 import { confidenceLabel, formatCurrency, formatPercent, formatSignedPercent } from "../lib/format";
 import type { TickerSummary } from "../types/api";
 
@@ -58,6 +59,8 @@ export function TickerDetail({ summary }: TickerDetailProps) {
           <small>{summary.latest_date ?? "not cached"}</small>
         </div>
       </div>
+
+      <PriceChart points={summary.price_history} />
 
       <div className="probability-summary">
         <div>

@@ -22,12 +22,27 @@ from app.analysis.backtest import run_signal_backtest
 def get_watchlist() -> list[dict[str, Any]]:
     return fetch_all(
         """
-        SELECT symbol, name, sector, exchange, active
-        FROM tickers
-        WHERE active = TRUE
+        SELECT
+            t.symbol, t.name, t.sector, t.exchange, t.active,
+            prices.latest_price, prices.latest_date, features.return_1d
+        FROM tickers t
+        LEFT JOIN (
+            SELECT
+                symbol,
+                arg_max(coalesce(adjusted_close, close), bar_date) AS latest_price,
+                max(bar_date) AS latest_date
+            FROM price_bars
+            GROUP BY symbol
+        ) prices ON prices.symbol = t.symbol
+        LEFT JOIN (
+            SELECT symbol, arg_max(return_1d, snapshot_date) AS return_1d
+            FROM feature_snapshots
+            GROUP BY symbol
+        ) features ON features.symbol = t.symbol
+        WHERE t.active = TRUE
         ORDER BY
-            CASE WHEN sector = 'Benchmark' THEN 1 ELSE 0 END,
-            symbol
+            CASE WHEN t.sector = 'Benchmark' THEN 1 ELSE 0 END,
+            t.symbol
         """
     )
 

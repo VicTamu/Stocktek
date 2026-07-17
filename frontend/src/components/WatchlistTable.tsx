@@ -11,14 +11,6 @@ interface WatchlistTableProps {
   onSelect: (symbol: string) => void;
 }
 
-const rowStats: Record<string, { price: number; daily: number }> = {
-  AAPL: { price: 212.4, daily: 0.006 },
-  MSFT: { price: 498.3, daily: 0.008 },
-  NVDA: { price: 144.9, daily: 0.012 },
-  AMD: { price: 164.2, daily: -0.004 },
-  SPY: { price: 624.1, daily: 0.003 },
-};
-
 export function WatchlistTable({
   watchlist,
   signals,
@@ -76,11 +68,13 @@ export function WatchlistTable({
               const isSelected = ticker.symbol === selectedSymbol;
               const probability = signal?.probability_outperform_spy ?? 0;
               const signalTone = probability >= 0.58 ? "bullish" : probability >= 0.53 ? "neutral" : "cautious";
-              const fallbackStats = rowStats[ticker.symbol];
               const stats =
                 ticker.symbol === selectedSymbol && selectedSummary
-                  ? { price: selectedSummary.latest_price ?? fallbackStats?.price, daily: selectedSummary.return_1d ?? fallbackStats?.daily }
-                  : fallbackStats;
+                  ? {
+                      price: selectedSummary.latest_price ?? ticker.latest_price,
+                      daily: selectedSummary.return_1d ?? ticker.return_1d,
+                    }
+                  : { price: ticker.latest_price, daily: ticker.return_1d };
               return (
                 <tr
                   className={isSelected ? "selected-row" : undefined}

@@ -14,11 +14,11 @@ const isoDate = (daysAgo = 0) => {
 };
 
 const tickers: Ticker[] = [
-  { symbol: "AAPL", name: "Apple Inc.", sector: "Technology", exchange: "NASDAQ", active: true },
-  { symbol: "MSFT", name: "Microsoft Corporation", sector: "Technology", exchange: "NASDAQ", active: true },
-  { symbol: "NVDA", name: "NVIDIA Corporation", sector: "Technology", exchange: "NASDAQ", active: true },
-  { symbol: "AMD", name: "Advanced Micro Devices, Inc.", sector: "Technology", exchange: "NASDAQ", active: true },
-  { symbol: "SPY", name: "SPDR S&P 500 ETF Trust", sector: "Benchmark", exchange: "NYSEARCA", active: true },
+  { symbol: "AAPL", name: "Apple Inc.", sector: "Technology", exchange: "NASDAQ", active: true, latest_price: 212.4, return_1d: 0.006 },
+  { symbol: "MSFT", name: "Microsoft Corporation", sector: "Technology", exchange: "NASDAQ", active: true, latest_price: 498.3, return_1d: 0.008 },
+  { symbol: "NVDA", name: "NVIDIA Corporation", sector: "Technology", exchange: "NASDAQ", active: true, latest_price: 144.9, return_1d: 0.012 },
+  { symbol: "AMD", name: "Advanced Micro Devices, Inc.", sector: "Technology", exchange: "NASDAQ", active: true, latest_price: 164.2, return_1d: -0.004 },
+  { symbol: "SPY", name: "SPDR S&P 500 ETF Trust", sector: "Benchmark", exchange: "NYSEARCA", active: true, latest_price: 624.1, return_1d: 0.003 },
 ];
 
 export const demoHealth: HealthResponse = {
@@ -154,6 +154,7 @@ function signal(symbol: string, probability: number, confidence: "low" | "medium
         confidence: 0.5,
       },
     ],
+    is_demo: true,
   };
 }
 

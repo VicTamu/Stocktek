@@ -16,3 +16,4 @@ data/raw/
 data/cache/
 frontend/.vite/
 
+.claude/

@@ -6,6 +6,9 @@ export interface Ticker {
   sector?: string | null;
   exchange?: string | null;
   active: boolean;
+  latest_price?: number | null;
+  latest_date?: string | null;
+  return_1d?: number | null;
 }
 
 export interface PricePoint {
@@ -33,6 +36,7 @@ export interface Signal {
   drivers: string[];
   risks: string[];
   evidence: EvidenceItem[];
+  is_demo?: boolean;
 }
 
 export interface EventSignal {

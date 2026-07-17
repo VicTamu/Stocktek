@@ -4,6 +4,7 @@ import { EventTimeline } from "./components/EventTimeline";
 import { Sidebar } from "./components/Sidebar";
 import { TickerDetail } from "./components/TickerDetail";
 import { TopBar } from "./components/TopBar";
+import { V1Mission } from "./components/V1Mission";
 import { WatchlistTable } from "./components/WatchlistTable";
 import { api } from "./lib/api";
 import {
@@ -135,7 +136,10 @@ export default function App() {
           ingestResult={ingestResult}
           loading={loadingRefresh}
           onRefresh={refreshDailyData}
+          signalsAreDemo={signals.some((signal) => signal.is_demo)}
         />
+
+        <V1Mission apiMode={apiMode} health={health} />
 
         {error && (
           <div className="error-banner">

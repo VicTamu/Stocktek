@@ -6,10 +6,11 @@ interface TopBarProps {
   loading: boolean;
   ingestResult?: IngestResult | null;
   apiMode: "live" | "demo";
+  signalsAreDemo?: boolean;
   onRefresh: () => void;
 }
 
-export function TopBar({ health, loading, ingestResult, apiMode, onRefresh }: TopBarProps) {
+export function TopBar({ health, loading, ingestResult, apiMode, signalsAreDemo, onRefresh }: TopBarProps) {
   const today = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -27,9 +28,15 @@ export function TopBar({ health, loading, ingestResult, apiMode, onRefresh }: To
       </div>
 
       <div className="topbar-actions">
-        <div className={apiMode === "live" ? "status-pill" : "status-pill warning"}>
-          {apiMode === "live" ? <ShieldCheck size={16} /> : <WifiOff size={16} />}
-          <span>{apiMode === "live" ? "Local API online" : "Demo fallback"}</span>
+        <div className={apiMode === "live" && !signalsAreDemo ? "status-pill" : "status-pill warning"}>
+          {apiMode === "live" && !signalsAreDemo ? <ShieldCheck size={16} /> : <WifiOff size={16} />}
+          <span>
+            {apiMode !== "live"
+              ? "Demo fallback"
+              : signalsAreDemo
+                ? "Demo signals — refresh data"
+                : "Local API online"}
+          </span>
         </div>
         <div className="market-date">
           <span>Latest close</span>

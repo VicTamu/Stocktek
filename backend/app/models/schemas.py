@@ -12,6 +12,9 @@ class Ticker(BaseModel):
     sector: str | None = None
     exchange: str | None = None
     active: bool = True
+    latest_price: float | None = None
+    latest_date: date | None = None
+    return_1d: float | None = None
 
 
 class WatchlistUpdate(BaseModel):
@@ -74,6 +77,7 @@ class Signal(BaseModel):
     drivers: list[str]
     risks: list[str]
     evidence: list[dict[str, Any]]
+    is_demo: bool = False
 
 
 class TickerSummary(BaseModel):

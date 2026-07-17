@@ -359,6 +359,94 @@ a {
   color: var(--amber);
 }
 
+.mission-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 24px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.mission-copy {
+  display: grid;
+  flex: 1 1 240px;
+  gap: 3px;
+  min-width: 220px;
+}
+
+.mission-copy span {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mission-copy strong {
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.mission-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mission-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: #2d3748;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.mission-step svg {
+  color: var(--blue);
+}
+
+.data-health-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border: 1px solid #b7e4c7;
+  border-radius: 7px;
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.data-health-card.stale {
+  border-color: #f0d59a;
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.data-health-card span {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.data-health-card strong {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.25;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
@@ -835,6 +923,27 @@ a {
   font-size: 13px;
 }
 
+.chart-frame {
+  padding: 15px 0 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chart-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.empty-chart {
+  display: grid;
+  place-items: center;
+  min-height: 110px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12.5px;
+  text-align: center;
+}
+
 .probability-summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 96px;
@@ -1246,6 +1355,11 @@ a {
   .dashboard-grid {
     padding-right: 14px;
     padding-left: 14px;
+  }
+
+  .mission-strip {
+    margin-right: 14px;
+    margin-left: 14px;
   }
 
   .dashboard-grid {
