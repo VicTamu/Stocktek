@@ -11,11 +11,12 @@ from app.analysis.pipeline import (
     get_ticker_summary,
     get_watchlist,
     ingest_daily,
+    run_backfill,
     run_backtest,
     update_watchlist,
 )
 from app.core.database import fetch_all
-from app.models.schemas import BacktestRequest, IngestRequest, WatchlistUpdate
+from app.models.schemas import BackfillRequest, BacktestRequest, IngestRequest, WatchlistUpdate
 
 
 router = APIRouter()
@@ -72,6 +73,11 @@ def read_ticker_events(symbol: str):
 @router.get("/signals")
 def read_signals(signal_date: date | None = Query(default=None, alias="date")):
     return get_signals(signal_date)
+
+
+@router.post("/backfill/signals")
+def create_backfill(payload: BackfillRequest):
+    return run_backfill(payload.symbols)
 
 
 @router.post("/backtests")

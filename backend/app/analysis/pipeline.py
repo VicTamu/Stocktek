@@ -16,6 +16,7 @@ from app.analysis.signals import build_signal
 from app.core.database import decode_json, encode_json, fetch_all, fetch_one, get_connection
 from app.core.demo_data import demo_events, demo_signals, demo_summary
 from app.models.schemas import BacktestRequest, IngestRequest
+from app.analysis.backfill import backfill_signals
 from app.analysis.backtest import run_signal_backtest
 
 
@@ -261,6 +262,11 @@ def get_ticker_events(symbol: str) -> dict[str, Any]:
         return {"events": demo_events(symbol), "documents": []}
 
     return {"events": event_rows, "documents": document_rows}
+
+
+def run_backfill(symbols: list[str] | None = None) -> dict[str, Any]:
+    with get_connection() as conn:
+        return backfill_signals(conn, symbols)
 
 
 def run_backtest(request: BacktestRequest) -> dict[str, Any]:

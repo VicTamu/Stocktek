@@ -103,6 +103,10 @@ class TickerSummary(BaseModel):
     is_demo: bool = False
 
 
+class BackfillRequest(BaseModel):
+    symbols: list[str] | None = None
+
+
 class BacktestRequest(BaseModel):
     start_date: date | None = None
     end_date: date | None = None

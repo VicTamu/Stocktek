@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 import uuid
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from statistics import mean, pstdev
 from typing import Any
 
@@ -40,7 +40,7 @@ def run_signal_backtest(
     metrics = _metrics(trades)
     return {
         "id": str(uuid.uuid4()),
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
         "start_date": start_date,
         "end_date": end_date,
         "universe": sorted({signal["symbol"] for signal in eligible}),

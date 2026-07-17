@@ -115,6 +115,9 @@ export default function App() {
   async function runBacktest() {
     setLoadingBacktest(true);
     try {
+      // Backfill reconstructs historical signals from cached bars so the
+      // backtest has a real sample; it is insert-only and cheap when current.
+      await api.backfill();
       const result = await api.backtest();
       setBacktest(result);
       setError(null);

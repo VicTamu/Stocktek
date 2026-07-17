@@ -39,6 +39,11 @@ def get_connection(read_only: bool = False):
 def init_db() -> None:
     settings.data_dir.mkdir(parents=True, exist_ok=True)
     with get_connection() as conn:
+        create_tables(conn)
+        seed_default_watchlist(conn)
+
+
+def create_tables(conn: duckdb.DuckDBPyConnection) -> None:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS tickers (
@@ -152,7 +157,6 @@ def init_db() -> None:
             )
             """
         )
-        seed_default_watchlist(conn)
 
 
 def seed_default_watchlist(conn: duckdb.DuckDBPyConnection) -> None:

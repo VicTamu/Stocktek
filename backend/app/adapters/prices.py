@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any, Callable
+from zoneinfo import ZoneInfo
 
 from app.adapters import stooq, tiingo, yahoo
 from app.core.config import settings
+
+MARKET_TZ = ZoneInfo("America/New_York")
 
 
 class PriceAdapterError(RuntimeError):
@@ -75,10 +78,32 @@ def fetch_price_bars(
         bars.extend(got)
         warnings.extend(source_warnings)
 
+    incomplete = _incomplete_session_date()
+    if incomplete:
+        kept = [bar for bar in bars if bar["bar_date"] < incomplete]
+        if len(kept) < len(bars):
+            warnings.append(
+                f"dropped {len(bars) - len(kept)} in-progress bars for {incomplete} "
+                "(session not closed; daily-close data only)"
+            )
+        bars = kept
+
     if reconcile and fetched_by:
         warnings.extend(_reconcile_latest_closes(bars, fetched_by, chain))
 
     return bars, warnings
+
+
+def _incomplete_session_date() -> date | None:
+    """Today's date in market time while the session has not yet closed.
+
+    Bars dated today are partial until the 4pm ET close (small buffer for
+    settlement); a daily-close product must not treat them as final.
+    """
+    now_et = datetime.now(MARKET_TZ)
+    if now_et.hour < 16 or (now_et.hour == 16 and now_et.minute < 15):
+        return now_et.date()
+    return None
 
 
 def _reconcile_latest_closes(

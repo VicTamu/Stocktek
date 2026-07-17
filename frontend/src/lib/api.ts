@@ -46,6 +46,11 @@ export const api = {
         include_filings: true,
       }),
     }),
+  backfill: () =>
+    request<{ features_inserted: number; signals_inserted: number }>(
+      "/api/backfill/signals",
+      { method: "POST", body: JSON.stringify({}) },
+    ),
   backtest: () =>
     request<BacktestResponse>("/api/backtests", {
       method: "POST",

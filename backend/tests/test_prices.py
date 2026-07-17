@@ -76,6 +76,25 @@ def test_reconciliation_quiet_on_agreement(monkeypatch):
     assert not any("disagree" in warning for warning in warnings)
 
 
+def test_drops_in_progress_session_bars(monkeypatch):
+    complete_day = date(2026, 7, 16)
+    partial_day = date(2026, 7, 17)
+    monkeypatch.setattr(prices, "source_chain", lambda: ["tiingo", "yahoo", "stooq"])
+    monkeypatch.setattr(prices, "_incomplete_session_date", lambda: partial_day)
+    monkeypatch.setitem(
+        prices.SOURCES,
+        "tiingo",
+        _fake_source([_bar("AAPL", complete_day, 100.0, "tiingo"), _bar("AAPL", partial_day, 101.0, "tiingo")]),
+    )
+    monkeypatch.setitem(prices.SOURCES, "yahoo", _fake_source([]))
+    monkeypatch.setitem(prices.SOURCES, "stooq", _fake_source([]))
+
+    bars, warnings = prices.fetch_price_bars(["AAPL"], reconcile=False)
+
+    assert [bar["bar_date"] for bar in bars] == [complete_day]
+    assert any("in-progress" in warning for warning in warnings)
+
+
 def test_index_symbols_route_to_yahoo(monkeypatch):
     day = date(2026, 7, 16)
     monkeypatch.setattr(prices, "source_chain", lambda: ["tiingo", "yahoo", "stooq"])
